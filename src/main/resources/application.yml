@@ -1,0 +1,45 @@
+ratelimit:
+  limits:
+    default:
+      capacity: 5
+      refillRate: 1
+
+  api-keys:
+    test-key-123:
+      plan: free
+    demo-key-abc:
+      plan: pro
+    admin-secret-999:
+      plan: enterprise
+
+  plans:
+    free:
+      /hello:
+        capacity: 3
+        refillRate: 1
+      /payments:
+        capacity: 1
+        refillRate: 1
+
+    pro:
+      /hello:
+        capacity: 20
+        refillRate: 5
+      /payments:
+        capacity: 10
+        refillRate: 3
+
+    enterprise:
+      /hello:
+        capacity: 100
+        refillRate: 20
+      /payments:
+        capacity: 50
+        refillRate: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+

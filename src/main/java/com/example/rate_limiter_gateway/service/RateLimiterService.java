@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.rate_limiter_gateway.dto.RateLimitCheckResponse;
 import com.example.rate_limiter_gateway.dto.RateLimitResult;
+import com.example.rate_limiter_gateway.entity.ApiKeyEntity;
 import com.example.rate_limiter_gateway.config.ApiKeyPlanConfig;
 import com.example.rate_limiter_gateway.config.RateLimitConfig;
+import com.example.rate_limiter_gateway.repositories.ApiKeyRepository;
 import com.example.rate_limiter_gateway.repositories.RedisRateLimiterRepository;
 
 @Service
@@ -17,6 +19,8 @@ public class RateLimiterService {
     private final RedisRateLimiterRepository redisRepo;
 
     @Autowired
+    private ApiKeyRepository apiKeyRepo;
+
     public RateLimiterService(RateLimitConfig config, ApiKeyPlanConfig planConfig,
             RedisRateLimiterRepository redisRepo) {
         this.config = config;
@@ -93,4 +97,11 @@ public class RateLimiterService {
                 result.resetAt());
 
     }
+
+    public boolean isValidApiKey(String apiKey) {
+        ApiKeyEntity key = apiKeyRepo.findByApiKey(apiKey);
+
+        return key != null && "ACTIVE".equalsIgnoreCase(key.getStatus());
+    }
+
 }
